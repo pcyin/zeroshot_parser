@@ -1,0 +1,32 @@
+author_paper_author	fb:en.paper.nmt	fb:en.author.dan_klein
+author_paper_author	fb:en.paper.multivariate_data_analysis	fb:en.author.tom_mitchell
+cites_paper_paper	fb:en.paper.nmt	fb:en.paper.multivariate_data_analysis
+cites_paper_paper	fb:en.paper.nmt	fb:en.paper.nmt
+cites_author_paper	fb:en.author.dan_klein	fb:en.paper.multivariate_data_analysis
+cites_author_paper	fb:en.author.dan_klein	fb:en.paper.nmt
+cites_author_author	fb:en.author.dan_klein	fb:en.author.tom_mitchell
+cites_author_author	fb:en.author.dan_klein	fb:en.author.dan_klein
+cites_paper_author	fb:en.paper.nmt	fb:en.author.tom_mitchell
+cites_paper_author	fb:en.paper.nmt	fb:en.author.dan_klein
+keyphrase_paper_keyphrase	fb:en.paper.nmt	fb:en.keyphrase.natural_language_processing
+keyphrase_paper_keyphrase	fb:en.paper.multivariate_data_analysis	fb:en.keyphrase.deep_learning
+keyphrase_author_keyphrase	fb:en.author.dan_klein	fb:en.keyphrase.natural_language_processing
+keyphrase_author_keyphrase	fb:en.author.dan_klein	fb:en.keyphrase.deep_learning
+keyphrase_author_keyphrase	fb:en.author.tom_mitchell	fb:en.keyphrase.deep_learning
+keyphrase_venue_keyphrase	fb:en.venue.nips	fb:en.keyphrase.deep_learning
+keyphrase_venue_keyphrase	fb:en.venue.nips	fb:en.keyphrase.natural_language_processing
+keyphrase_journal_keyphrase	fb:en.journal.nature	fb:en.keyphrase.deep_learning
+venue_paper_venue	fb:en.paper.nmt	fb:en.venue.nips
+journal_paper_journal	fb:en.paper.multivariate_data_analysis	fb:en.journal.nature
+publishin_author_venue	fb:en.author.dan_klein	fb:en.venue.nips
+publishin_author_journal	fb:en.author.tom_mitchell	fb:en.journal.nature
+publication_year_paper_number	fb:en.paper.nmt	(number 2016 year)
+publication_year_paper_number	fb:en.paper.multivariate_data_analysis	(number 2012 year)
+title_paper_title	fb:en.paper.nmt	fb:en.title.nmt
+title_paper_title	fb:en.paper.multivariate_data_analysis	fb:en.title.multivariate_data_analysis
+dataset_paper_dataset	fb:en.paper.nmt	fb:en.dataset.imagenet
+dataset_paper_dataset	fb:en.paper.multivariate_data_analysis	fb:en.dataset.wikipedia
+citation_count_paper_number	fb:en.paper.nmt	(number 5 count)
+citation_count_paper_number	fb:en.paper.multivariate_data_analysis	(number 10 count)
+citation_count_author_number	fb:en.author.tom_mitchell	(number 7 count)
+citation_count_author_number	fb:en.author.dan_klein	(number 100 count)

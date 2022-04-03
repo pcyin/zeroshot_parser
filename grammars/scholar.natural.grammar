@@ -1,0 +1,235 @@
+(include general.natural.grammar)
+
+# Entity Types
+
+####### Author #######
+(rule $TypeNP (author) (ConstantFn fb:en.author) (_author_ _author_))
+
+# Relation: Publish in <venue>
+# (rule $PREP (in) (ConstantFn (string publishin_author_venue)) (_author_ _venue_))
+(rule $VP/NP (publish in) (ConstantFn (string publishin_author_venue)) (_author_ _venue_))
+# (rule $SupVP/NP (publish the most in) (ConstantFn (string publishin_author_venue)) (_author_ _venue_))
+(rule $RelationChainVP/NP/r (publish mostly in) (lambda obj (lambda subj (call @countSuperlative (var subj) (string max) (string !author_paper_author) (call @getProperty (var obj) (string !venue_paper_venue))))) (_author_ _venue_) (0))
+(rule $RelationChainVP (publish mostly in) (lambda subj (lambda obj (call @countSuperlative (var obj) (string max) (string !venue_paper_venue) (call @getProperty (var subj) (string !author_paper_author))))) (_author_ _venue_) (is_io_type_annot))
+
+# Relation: Publish in <journal>
+# (rule $PREP (in) (ConstantFn (string publishin_author_journal)) (_author_ _journal_))
+(rule $VP/NP (publish in) (ConstantFn (string publishin_author_journal)) (_author_ _journal_))
+# (rule $SupVP (publish the most in) (ConstantFn (string publishin_author_journal)) (_author_ _journal_))
+(rule $RelationChainVP/NP/r (publish mostly in) (lambda obj (lambda subj (call @countSuperlative (var subj) (string max) (string !author_paper_author) (call @getProperty (var obj) (string !journal_paper_journal))))) (_author_ _journal_) (0))
+(rule $RelationChainVP (publish mostly in) (lambda subj (lambda obj (call @countSuperlative (var obj) (string max) (string !journal_paper_journal) (call @getProperty (var subj) (string !author_paper_author))))) (_author_ _journal_) (is_io_type_annot))
+
+# Relation: Publish in <keyphrase>
+# (rule $PREP (in) (ConstantFn (string keyphrase_author_keyphrase)) (_author_ _keyphrase_))
+(rule $RelNP (keyphrase) (ConstantFn (string keyphrase_author_keyphrase)) (_author_ _keyphrase_))
+(rule $RelNP (topic) (ConstantFn (string keyphrase_author_keyphrase)) (_author_ _keyphrase_))
+(rule $VP/NP (works on) (ConstantFn (string keyphrase_author_keyphrase)) (_author_ _keyphrase_))
+# (rule $SupVP/NP (publish the most in) (ConstantFn (string keyphrase_author_keyphrase)) (_author_ _keyphrase_))
+(rule $RelationChainVP/NP/r (publish mostly in) (lambda obj (lambda subj (call @countSuperlative (var subj) (string max) (string !author_paper_author) (call @getProperty (var obj) (string !keyphrase_paper_keyphrase))))) (_author_ _keyphrase_) (0))
+(rule $RelationChainVP (publish mostly in) (lambda subj (lambda obj (call @countSuperlative (var obj) (string max) (string !keyphrase_paper_keyphrase) (call @getProperty (var subj) (string !author_paper_author))))) (_author_ _keyphrase_) (is_io_type_annot))
+
+# Relation: cite <author>
+(rule $VP/NP (cites) (ConstantFn (string cites_author_author)) (_author_ _author_))
+## Superlative form: (<subj:author> that) cite <obj:author> the most
+(rule $RelationChainVP/r (cites $NP the most) (lambda obj (lambda subj (call @countSuperlative (var subj) (string max) (string !author_paper_author) (call @filter (call @getProperty (var subj) (string !author_paper_author)) (string cites_paper_paper) (string =) (call @getProperty (var obj) (string !author_paper_author)) ) ) ) ) (_author_ _author_) (is_io_type_annot) )
+
+# Relation: citation count <number>
+(rule $RelNP (citations count) (ConstantFn (string citation_count_author_number)) (_author_ _number_))
+(rule $RelSubSuperlativeAdj (most cited) (ConstantFn (string citation_count_author_number)) (_author_ _author_))
+# (rule $RelSubSuperlativeAdj (most prominent) (ConstantFn (string citation_count_author_number)) (_author_ _author_))
+# (rule $RelSubSuperlativeAdj (top) (ConstantFn (string citation_count_author_number)) (_author_ _author_))
+
+# Special Instances: most cited <author>
+# (rule $NP (most cited $NP) (lambda s (call @countSuperlative (var s) (string max) (string !cites_paper_author))) (_author_ _author_))
+
+# Relation: is cited by <author>
+# Only one example in the dataset
+# (rule $VP/NP (is cited by) (ConstantFn (call @reverse (string cites_author_author))) (_author_ _author_))
+# (rule $SupVP/NP (is most cited by) (ConstantFn (call @reverse (string cites_author_author))) (_author_ _author_))
+
+# Relation: cite <paper>
+(rule $VP/NP (cites) (ConstantFn (string cites_author_paper)) (_author_ _paper_))
+## Superlative form: (<subj:author> that) cite <obj:paper> the most
+(rule $RelationChainVP/r (cites $NP the most) (lambda obj (lambda subj (call @countSuperlative (var subj) (string max) (string !author_paper_author) (call @filter (call @getProperty (call @singleton fb:en.paper ) (string !type)) (string cites_paper_paper) (string =) (var obj) ) ) ) ) (_author_ _paper_) (is_io_type_annot) )
+(rule $RelationChainVP (cites the most) (lambda subj (lambda obj (call @countSuperlative (var obj) (string max) (string !cites_paper_paper) (call @getProperty (var subj) (string !author_paper_author)) ) ) ) (_author_ _paper_) (is_io_type_annot) )
+# (rule $RelationChainVP (cites the most) (lambda subj (lambda obj (call @countSuperlative (var subj) (string max) (string !author_paper_author) (call @filter (call @getProperty (var subj) (string !author_paper_author)) (string cites_paper_paper) (string =) (var obj) ) ) ) ) (_author_ _paper_) (is_io_type_annot) )
+
+# Relation: write <paper>
+# (rule $VP/NP (writes) (ConstantFn (string !author_paper_author)) (_author_ _paper_))
+(rule $SubjectCountSuperlativeRelationNPPrep (the most productive author of) (ConstantFn (string !author_paper_author)) (_author_ _paper_))
+
+# Relation: is cited by <paper>
+# (rule $VP/NP (is cited by) (ConstantFn (call @reverse (string cites_author_paper))) (_author_ _paper_))
+# (rule $SupVP/NP (is most cited by) (ConstantFn (call @reverse (string cites_author_paper))) (_author_ _paper_))
+
+## Instances
+(rule $EntityNP1 (Dan Klein) (ConstantFn fb:en.author.dan_klein) (_author_ _author_))
+(rule $EntityNP1 (Tom Mitchell) (ConstantFn fb:en.author.tom_mitchell) (_author_ _author_))
+
+####### Paper #######
+(rule $TypeNP (paper) (ConstantFn fb:en.paper) (_paper_ _paper_))
+(rule $PaperUnaryNP (paper) (ConstantFn (call @getProperty (call @singleton fb:en.paper) (string !type))) (_paper_ _paper_))
+
+# Relation: keyphrase
+
+(rule $RelNP (topic) (ConstantFn (string keyphrase_paper_keyphrase)) (_paper_ _keyphrase_))
+(rule $RelNP (keyphrase) (ConstantFn (string keyphrase_paper_keyphrase)) (_paper_ _keyphrase_))
+# (rule $PREP (about) (ConstantFn (string keyphrase_paper_keyphrase)) (_paper_ _keyphrase_))
+(rule $PREP (in) (ConstantFn (string keyphrase_paper_keyphrase)) (_paper_ _keyphrase_))
+
+# Relation: Venue
+(rule $RelNP (venue) (ConstantFn (string venue_paper_venue)) (_paper_ _venue_))
+(rule $PREP (in) (ConstantFn (string venue_paper_venue)) (_paper_ _venue_))
+(rule $PREP (published in) (ConstantFn (string venue_paper_venue)) (_paper_ _venue_))
+
+# Relation: Journal
+(rule $RelNP (journal) (ConstantFn (string journal_paper_journal)) (_paper_ _venue_))
+(rule $PREP (in) (ConstantFn (string journal_paper_journal)) (_paper_ _venue_))
+(rule $PREP (published in) (ConstantFn (string journal_paper_journal)) (_paper_ _journal_))
+
+# Relation: Title
+(rule $RelNP (title) (ConstantFn (string title_paper_title)) (_paper_ _title_))
+(rule $PREP (titled) (ConstantFn (string title_paper_title)) (_paper_ _title_))
+
+# Relation: citation count <number>
+(rule $RelNP (citation count) (ConstantFn (string citation_count_paper_number)) (_paper_ _number_))
+
+# Special Instances: most cited <paper>
+# (rule $NP (most cited $NP) (lambda s (call @countSuperlative (var s) (string max) (call @reverse (string cites_paper_paper)))) (_paper_ _paper_))
+(rule $RelSubSuperlativeAdj (most cited) (ConstantFn (string citation_count_paper_number)) (_paper_ _paper_))
+
+# Relation: Publication Year
+(rule $PREP (in) (ConstantFn (string publication_year_paper_number)) (_paper_ _number_))
+(rule $PREP (published in) (ConstantFn (string publication_year_paper_number)) (_paper_ _number_))
+
+(rule $RelSubSuperlativeAdj (most recent) (ConstantFn (string publication_year_paper_number)) (_paper_ _paper_))
+(rule $RelSubSuperlativeMinAdj (first) (ConstantFn (string publication_year_paper_number)) (_paper_ _paper_))
+
+# Virtual Relation: Venue Year
+(rule $ComparativeLtPREP (published before) (ConstantFn (string publication_year_paper_number)) (_paper_ _number_))
+(rule $ComparativeGtPREP (published after) (ConstantFn (string publication_year_paper_number)) (_paper_ _number_))
+
+# Relation: Author
+(rule $RelNP (author) (ConstantFn (string author_paper_author)) (_paper_ _author_))
+(rule $PREP (by) (ConstantFn (string author_paper_author)) (_paper_ _author_))
+#(rule $PREP (written by) (ConstantFn (string author_paper_author)) (_paper_ _author_))
+(rule $PREP (authored by) (ConstantFn (string author_paper_author)) (_paper_ _author_))
+#(rule $PREP (authored by) (ConstantFn (string author_paper_author)) (_paper_ _author_))
+#(rule $PREP (coauthored by) (ConstantFn (string author_paper_author)) (_paper_ _author_))
+
+# Relation: Dataset
+(rule $RelNP (dataset) (ConstantFn (string dataset_paper_dataset)) (_paper_ _dataset_))
+(rule $VP/NP (use) (ConstantFn (string dataset_paper_dataset)) (_paper_ _dataset_))
+
+# Relation: Cite <paper>
+(rule $VP/NP (cites) (ConstantFn (string cites_paper_paper)) (_paper_ _paper_))
+
+# Relation: is cited by <paper>
+# (rule $VP/NP (is cited by) (ConstantFn (call @reverse (string cites_paper_paper))) (_paper_ _paper_))
+# (rule $SupVP/NP (is most cited by) (ConstantFn (call @reverse (string cites_paper_paper))) (_paper_ _paper_))
+
+# Relation: Cite <author>
+(rule $VP/NP (cites) (ConstantFn (string cites_paper_author)) (_paper_ _author_))
+
+# Relation: is cited by <author>
+# (rule $VP/NP (is cited by) (ConstantFn (call @reverse (string cites_author_paper))) (_paper_ _author_))
+# (rule $SupVP/NP (is most cited by) (ConstantFn (call @reverse (string cites_author_paper))) (_paper_ _author_))
+
+
+###### number ######
+(rule $EntityNP1 (10) (ConstantFn (number 10 count)) (_number_ _number_))
+
+###### Key Phrase ######
+(rule $TypeNP (keyphrase) (ConstantFn fb:en.keyphrase) (_keyphrase_ _keyphrase_))
+# (rule $TypeNP (keyword) (ConstantFn fb:en.keyphrase) (_keyphrase_ _keyphrase_))
+(rule $TypeNP (topic) (ConstantFn fb:en.keyphrase) (_keyphrase_ _keyphrase_))
+
+#(rule $NP (most common $NP) (lambda e (call @countSuperlative (var e) (string max))) (_keyphrase_ _keyphrase_))
+#(rule $NP (most popular $NP) (lambda e (call @countSuperlative (var e) (string max))) (_keyphrase_ _keyphrase_))
+
+# Relation: of <paper>
+# (rule $PREP (of) (ConstantFn (string !keyphrase_paper_keyphrase)) (_keyphrase_ _paper_))
+
+(rule $SubjectCountSuperlativeRelationNPPrep (the most popular topic for) (ConstantFn (string !keyphrase_paper_keyphrase)) (_keyphrase_ _paper_))
+#(rule $SubjectCountSuperlativeRelationNPPrep (the most popular keyphrase for) (ConstantFn (call @reverse (string keyphrase_paper_keyphrase))) (_keyphrase_ _paper_))
+
+# Relation: of <author>
+# (rule $PREP (of) (ConstantFn (string !keyphrase_author_keyphrase)) (_keyphrase_ _author_))
+
+# Instances
+(rule $EntityNP1 (deep learning) (ConstantFn fb:en.keyphrase.deep_learning) (_keyphrase_ _keyphrase_))
+(rule $EntityNP1 (machine learning) (ConstantFn fb:en.keyphrase.machine_learning) (_keyphrase_ _keyphrase_))
+#(rule $EntityNP1 (natural language processing) (ConstantFn fb:en.keyphrase.natural_language_processing) (_keyphrase_ _keyphrase_))
+
+###### Venue ######
+(rule $TypeNP (venue) (ConstantFn fb:en.venue) (_venue_ _venue_))
+(rule $TypeNP (conference) (ConstantFn fb:en.venue) (_venue_ _venue_))
+
+# Relation: keyphrase
+# (rule $RelNP (keyphrase) (ConstantFn (string keyphrase_venue_keyphrase)) (_venue_ _keyphrase_))
+(rule $RelNP (topic) (ConstantFn (string keyphrase_venue_keyphrase)) (_venue_ _keyphrase_))
+(rule $PREP (in) (ConstantFn (string keyphrase_venue_keyphrase)) (_venue_ _keyphrase_))
+
+(rule $SubjectCountSuperlativeRelationNPPrep (the most popular venue for) (ConstantFn (string !venue_paper_venue)) (_venue_ _paper_))
+
+# Instances
+(rule $EntityNP1 (NIPS) (ConstantFn fb:en.venue.nips) (_venue_ _venue_))
+
+###### Journal ######
+(rule $TypeNP (journal) (ConstantFn fb:en.journal) (_journal_ _journal_))
+
+# Relation: keyphrase
+# (rule $RelNP (keyphrase) (ConstantFn (string keyphrase_journal_keyphrase)) (_journal_ _keyphrase_))
+(rule $RelNP (topic) (ConstantFn (string keyphrase_journal_keyphrase)) (_journal_ _keyphrase_))
+(rule $PREP (in) (ConstantFn (string keyphrase_journal_keyphrase)) (_journal_ _keyphrase_))
+
+# Instances
+(rule $EntityNP1 (Nature) (ConstantFn fb:en.journal.nature) (_journal_ _journal_))
+
+###### Title ######
+(rule $TypeNP (title) (ConstantFn fb:en.title) (_title_ _title_))
+
+# Instances
+(rule $EntityNP1 (neural machine translation) (ConstantFn fb:en.title.nmt) (_title_ _title_))
+(rule $EntityNP1 (Multivariate Data Analysis) (ConstantFn fb:en.title.multivariate_data_analysis) (_title_ _title_))
+
+###### Publication Year ######
+(rule $RelNP (publication year) (ConstantFn (string publication_year_paper_number)) (_paper_ _number_))
+
+(rule $EntityNP1 (2012) (ConstantFn (number 2012 year)) (_number_ _number_))
+(rule $EntityNP1 (2016) (ConstantFn (number 2016 year)) (_number_ _number_))
+
+###### Dataset ######
+(rule $TypeNP (dataset) (ConstantFn fb:en.dataset) (_dataset_ _dataset_))
+
+# Relation: used by
+# (rule $PREP (used by) (ConstantFn (string dataset_dataset_paper)) (_dataset_ _paper_))
+(rule $PREP (used in) (ConstantFn (string !dataset_paper_dataset)) (_dataset_ _paper_))
+
+(rule $SubjectCountSuperlativeRelationNPPrep (the most popular dataset for) (ConstantFn (string !dataset_paper_dataset)) (_keyphrase_ _paper_))
+
+# Instances
+(rule $EntityNP1 (ImageNet) (ConstantFn fb:en.dataset.imagenet) (_dataset_ _dataset_))
+(rule $EntityNP1 (Wikipedia) (ConstantFn fb:en.dataset.wikipedia) (_dataset_ _dataset_))
+
+# The following rules are not used.
+# ACL/NIPS papers
+(rule $VenueAdj ($EntityNP1) (lambda venue (lambda paper (call @filter (var paper) (string venue_paper_venue) (string =) (var venue) ))) (_venue_ _paper_))
+# 2017 papers
+(rule $PublicationYearAdj ($EntityNP1) (lambda year (lambda paper (call @filter (var paper) (string publication_year_paper_number) (string =) (var year) ))) (_number_ _paper_))
+# deep learning papers
+(rule $KeyphraseAdj ($EntityNP1) (lambda keyphrase (lambda paper (call @filter (var paper) (string keyphrase_paper_keyphrase) (string =) (var keyphrase) ))) (_keyphrase_ _paper_))
+# Dan Klein papers
+(rule $AuthorAdj ($EntityNP1) (lambda author (lambda paper (call @filter (var paper) (string author_paper_author) (string =) (var author) ))) (_author_ _paper_))
+
+(rule $CompPaperUnaryNP ($VenueAdj $PaperUnaryNP) (JoinFn forward betaReduce) (_paper_ _paper_))
+(rule $CompPaperUnaryNP ($PublicationYearAdj $PaperUnaryNP) (JoinFn forward betaReduce) (_paper_ _paper_))
+(rule $CompPaperUnaryNP ($KeyphraseAdj $PaperUnaryNP) (JoinFn forward betaReduce) (_paper_ _paper_))
+(rule $CompPaperUnaryNP ($AuthorAdj $PaperUnaryNP) (JoinFn forward betaReduce) (_paper_ _paper_))
+(rule $CompPaperUnaryNP ($VenueAdj $CompPaperUnaryNP) (JoinFn forward betaReduce) (_paper_ _paper_))
+(rule $CompPaperUnaryNP ($PublicationYearAdj $CompPaperUnaryNP) (JoinFn forward betaReduce) (_paper_ _paper_))
+(rule $CompPaperUnaryNP ($KeyphraseAdj $CompPaperUnaryNP) (JoinFn forward betaReduce) (_paper_ _paper_))
+(rule $CompPaperUnaryNP ($AuthorAdj $CompPaperUnaryNP) (JoinFn forward betaReduce) (_paper_ _paper_))
+(rule $CompPaperUnaryNP ($RelAdj $CompPaperUnaryNP) (JoinFn forward betaReduce) (_paper_ _paper_))
+(rule $UnaryNP ($CompPaperUnaryNP) (IdentityFn) (_any_ _any_))
+
